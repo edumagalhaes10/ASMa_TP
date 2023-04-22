@@ -1,6 +1,7 @@
 import getpass
 import time
 import json
+import webbrowser
 
 from spade import quit_spade
 from Agents.Plane import Plane
@@ -14,7 +15,7 @@ from Agents.Flight_Manager import Flight_Manager
 if __name__ == "__main__":
     # ,f'plane{i}',"Ryanair", "Passengers", "Porto", "Lisboa", "TakingOff"
     
-    default_info = {"company":"Ryanair", "type":"Passengers", "origin":"Porto", "destination":"Lisboa", "status":"TakingOff"}
+    default_info = {"company":"Ryanair", "type":"Passengers", "origin":"Porto", "destination":"Lisboa"}
 
     f = open("conf.json")
     conf = json.load(f)
@@ -28,24 +29,29 @@ if __name__ == "__main__":
     print("Control Tower JID: ",control_tower.get("jid"))
     res_control_tower = control_tower.start()
     res_control_tower.result()
+    control_tower.web.start(hostname="127.0.0.1", port="10000")
+    webbrowser.open("127.0.0.1:10000/spade")
 
     planes = {}
     print("Creating 4 Planes...")
     for i in range(4):
+        plane_jid = f'plane{i}{jid}'
+        plane = Plane(plane_jid,pwd)
+        plane.set('jid', plane_jid) 
+        plane.set('id', f'plane{i}')
+        for key, value in default_info.items():
+            plane.set(key, value)
         if i<2:
-            plane_jid = f'plane{i}{jid}'
-            plane = Plane(plane_jid,pwd)
-            plane.set('jid', plane_jid) 
-            plane.set('id', f'plane{i}')
-            for key, value in default_info.items():
-                plane.set(key, value)
             # print("JID: ",plane.get('jid'))
             # print("Company: ",plane.get('company'))
-            planes[f'plane{i}'] = plane
+            plane.set("status", "permission2TakeOff")
         else:
-            pass
-
+            plane.set("status", "permission2Land")
+        
+        plane.set("control_tower", control_tower_jid)
+        planes[f'plane{i}'] = plane
         plane.start()
+        # plane.web.start(hostname="127.0.0.1", port="10000")
 
     for p in planes.values():
         print(p.__str__())

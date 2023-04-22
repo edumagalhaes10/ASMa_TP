@@ -1,4 +1,7 @@
 from spade.agent import Agent
+from Behaviours.Permission2TakeOff import Permission2TakeOff
+from Behaviours.PlaneListener import PlaneListener
+from Behaviours.Permission2Land import Permission2Land
 
 class Plane(Agent):
 
@@ -12,9 +15,12 @@ COMPANY: {self.get("company")}
     async def setup(self):
         print(f"Plane {str(self.jid)}" + " starting...")
 
+        if self.get("status") == "permission2TakeOff":
+            a = Permission2TakeOff()
+            self.add_behaviour(a)
+        elif self.get("status") == "permission2Land":
+            a = Permission2Land()
+            self.add_behaviour(a)
 
-        #Add Behaviours
-        # a = Behaviour X
-        # b = Behaviour Y
-        # self.add_behaviour(a)
-        # self.add_behaviour(b)
+        b = PlaneListener()
+        self.add_behaviour(b)
