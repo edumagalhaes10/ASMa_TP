@@ -15,3 +15,6 @@ class PlaneListener(CyclicBehaviour):
                 print("Almost Landing")
             elif response.body == "Permission to land denied":
                 print("Permission to land denied")
+
+    async def on_end(self):
+        await self.agent.stop()

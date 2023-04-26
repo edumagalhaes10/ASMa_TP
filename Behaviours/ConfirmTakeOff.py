@@ -14,6 +14,5 @@ class ConfirmTakeOff(CyclicBehaviour):
                 await self.send(response)
             # else:
             #     self.agent.deny_takeoff()
-        # else:
-        #     # No response received within timeout period
-        #     self.agent.timeout()
+
+   

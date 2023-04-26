@@ -32,6 +32,11 @@ if __name__ == "__main__":
     control_tower.web.start(hostname="127.0.0.1", port="10000")
     webbrowser.open("127.0.0.1:10000/spade")
 
+    hangar_manager_jid = "hangar_manager" + jid
+    hangar_manager = Hangar_Manager(hangar_manager_jid, pwd)
+    hangar_manager.set("jid", hangar_manager_jid)
+    hangar_manager.start()
+
     planes = {}
     print("Creating 4 Planes...")
     for i in range(4):
@@ -51,10 +56,10 @@ if __name__ == "__main__":
         plane.set("control_tower", control_tower_jid)
         planes[f'plane{i}'] = plane
         plane.start()
-        # plane.web.start(hostname="127.0.0.1", port="10000")
+        plane.web.start(hostname="127.0.0.1", port=f"1000{i+1}")
 
-    for p in planes.values():
-        print(p.__str__())
+    # for p in planes.values():
+    #     print(p.__str__())
 
 
     # print([p.__str__ for p in planes.values()])
