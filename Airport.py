@@ -70,6 +70,7 @@ if __name__ == "__main__":
             for id, p in planes.items():
                 print(id)
                 p.stop()
+            hangar_manager.stop()
             control_tower.stop()
             break
     print("Agents finished")

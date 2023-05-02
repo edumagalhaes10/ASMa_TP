@@ -13,6 +13,7 @@ class ConfirmLanding(CyclicBehaviour):
                 response = Message(to=str(msg.sender))
                 response.body = "Permission to land granted"
                 await self.send(response)
+                
             elif msg.body == "Permission to land?" and self.agent.get("landingTrack").get_available() == False:
                 print(f"Permission to land received - {str(msg.sender)}")
                 response = Message(to=str(msg.sender))
