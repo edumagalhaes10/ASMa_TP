@@ -1,5 +1,6 @@
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
+import time 
 
 class PlaneListener(CyclicBehaviour):
     async def run(self):
@@ -8,6 +9,7 @@ class PlaneListener(CyclicBehaviour):
             print("RESPONSE: ",response.body)
             if response.body == "Permission to take off granted":
                 print("Almost Taking Off")
+                # time.sleep(5)
             elif response.body == "Permission to take off denied":
                 print("Permission to take off denied")
 

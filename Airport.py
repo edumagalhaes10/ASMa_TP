@@ -35,28 +35,29 @@ if __name__ == "__main__":
     hangar_manager_jid = "hangar_manager" + jid
     hangar_manager = Hangar_Manager(hangar_manager_jid, pwd)
     hangar_manager.set("jid", hangar_manager_jid)
+    hangar_manager.set("control_tower", control_tower_jid)
     hangar_manager.start()
 
-    planes = {}
-    print("Creating 4 Planes...")
-    for i in range(4):
-        plane_jid = f'plane{i}{jid}'
-        plane = Plane(plane_jid,pwd)
-        plane.set('jid', plane_jid) 
-        plane.set('id', f'plane{i}')
-        for key, value in default_info.items():
-            plane.set(key, value)
-        if i<2:
-            # print("JID: ",plane.get('jid'))
-            # print("Company: ",plane.get('company'))
-            plane.set("status", "permission2TakeOff")
-        else:
-            plane.set("status", "permission2Land")
+    # planes = {}
+    # print("Creating 4 Planes...")
+    # for i in range(4):
+    #     plane_jid = f'plane{i}{jid}'
+    #     plane = Plane(plane_jid,pwd)
+    #     plane.set('jid', plane_jid) 
+    #     plane.set('id', f'plane{i}')
+    #     for key, value in default_info.items():
+    #         plane.set(key, value)
+    #     if i<2:
+    #         # print("JID: ",plane.get('jid'))
+    #         # print("Company: ",plane.get('company'))
+    #         plane.set("status", "permission2TakeOff")
+    #     else:
+    #         plane.set("status", "permission2Land")
         
-        plane.set("control_tower", control_tower_jid)
-        planes[f'plane{i}'] = plane
-        plane.start()
-        plane.web.start(hostname="127.0.0.1", port=f"1000{i+1}")
+    #         plane.set("control_tower", control_tower_jid)
+    #         planes[f'plane{i}'] = plane
+    #         plane.start()
+    #         plane.web.start(hostname="127.0.0.1", port=f"1000{i+1}")
 
     # for p in planes.values():
     #     print(p.__str__())
@@ -67,9 +68,9 @@ if __name__ == "__main__":
         try:
             time.sleep(1)
         except KeyboardInterrupt:
-            for id, p in planes.items():
-                print(id)
-                p.stop()
+            # for id, p in planes.items():
+            #     print(id)
+            #     p.stop()
             hangar_manager.stop()
             control_tower.stop()
             break
