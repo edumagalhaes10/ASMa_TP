@@ -6,6 +6,6 @@ class Permission2Land(OneShotBehaviour):
         print("Permission to land")
         msg = Message(to=self.agent.get("control_tower"))
         msg.body = "Permission to land?"
-        # msg.set_metadata("performative", "request")
+        msg.set_metadata("performative", "request")
         await self.send(msg)
 

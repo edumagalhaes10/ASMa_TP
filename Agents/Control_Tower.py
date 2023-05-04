@@ -10,6 +10,8 @@ class Control_Tower(Agent):
     async def setup(self):
         print(f"Control Tower {str(self.jid)}" + " starting...")
         self.set("landingQueue", [])
+        self.set("takeOffQueue",[])
+        self.set("planeInOperation", ("",""))
         self.set("maxPlanes2Land", 10)
         landingTrack = LandingTrack()
         self.set("landingTrack", landingTrack)
