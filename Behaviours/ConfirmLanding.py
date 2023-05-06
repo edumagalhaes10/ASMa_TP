@@ -1,5 +1,6 @@
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
+from Behaviours.AskHangar import AskHangar
 
 class ConfirmLanding(CyclicBehaviour):
     #FALTA TIMEOUT 
@@ -11,11 +12,15 @@ class ConfirmLanding(CyclicBehaviour):
             if performative == "request":
                 if msg.body == "Permission to land?" and self.agent.get("landingTrack").get_available() == True:
                     self.agent.get("landingTrack").set_available(False) 
-                    self.agent.set("planeInOperation",(str(msg.sender),"Landing"))
+                    # self.agent.set("planeInOperation",(str(msg.sender),"Landing"))
                     print(f"Permission to land received - {str(msg.sender)}")
-                    response = Message(to=str(msg.sender))
-                    response.body = "Permission to land granted"
-                    await self.send(response)
+
+                    askhangar = AskHangar(str(msg.sender))
+                    self.agent.add_behaviour(askhangar)
+
+                    # response = Message(to=str(msg.sender))
+                    # response.body = "Permission to land granted"
+                    # await self.send(response)
 
                 elif msg.body == "Permission to land?" and self.agent.get("landingTrack").get_available() == False:
                     self.agent.get("landingQueue").append(str(msg.sender))

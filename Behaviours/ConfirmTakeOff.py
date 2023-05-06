@@ -1,6 +1,8 @@
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
 
+#MAYBE MUDAR PARA ONE SHOT E RECEBER MSGS NO LISTENER
+
 class ConfirmTakeOff(CyclicBehaviour):
     async def run(self):
         # Wait for a message granting or denying permission to take off

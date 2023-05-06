@@ -1,6 +1,7 @@
 from spade.agent import Agent
 from UtilsAirport.Hangar import Hangar
 from Behaviours.InformControlTower import InformControlTower
+from Behaviours.HangarManagerListener import HangarManagerListener
 
 class Hangar_Manager(Agent):
     async def setup(self):
@@ -19,12 +20,14 @@ class Hangar_Manager(Agent):
                 
         a = InformControlTower()
         self.add_behaviour(a)
-
+          
+        b = HangarManagerListener()
+        self.add_behaviour(b)
         
         # for i in range(16):
         #     print(self.get("hangars")[i].__str__())
 
-    def closest_available(self, type):
+    def closest_available(self, type, plane):
         hangar_available = None
         for hangar in self.get("hangars"):
             if type == hangar.type and hangar.available == True:
@@ -33,6 +36,8 @@ class Hangar_Manager(Agent):
                 elif (hangar.x + hangar.y) < (hangar_available.x + hangar_available.y):
                     hangar_available = hangar
         
+        if hangar_available != None:
+            hangar_available.set_plane(plane)
         return hangar_available
 
 

@@ -8,6 +8,9 @@ class Plane(Agent):
 
     companies = {1:"TAP", 2:"Ryanair", 3:"Aegean Airlines", 4:"AirBaltic", 5:"Air Europa", 6:"Air Transat", 7:"Azores Airlines", 8:"British Airways", 9:"Brussels Airlines", 10:"EasyJet", 11: "Eurowings", 12:"Finnair", 13:"Iberia", 14:"Lufthansa", 15:"Luxair", 16:"Transavia", 17:"Vueling", 18:"Wizz Air", 19:"KLM", 20:"Swiss International"}
     destinations = {} # adicionar alguns destinos
+    fuel = 0 # acrescentar valor random de 0 a 100, decrementar com o tempo
+    # default_info = {"company":"Ryanair", "type":"Passengers", "origin":"Porto", "destination":"Lisboa"}
+
 
     def __str__(self):
         return f'''*****

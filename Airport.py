@@ -36,16 +36,23 @@ if __name__ == "__main__":
     hangar_manager = Hangar_Manager(hangar_manager_jid, pwd)
     hangar_manager.set("jid", hangar_manager_jid)
     hangar_manager.set("control_tower", control_tower_jid)
+    hangar_manager.web.start(hostname="127.0.0.1", port="10010")
+
+    control_tower.set("hangar_manager", hangar_manager_jid)
+
     hangar_manager.start()
 
     flight_manager_jid = "flight_manager" + jid
     flight_manager = Flight_Manager(flight_manager_jid, pwd)
     flight_manager.set("jid", flight_manager_jid)
     flight_manager.set("control_tower", control_tower_jid)
+    control_tower.set("flight_manager", flight_manager_jid)
+
     flight_manager.start()
     # flight_manager.web.start(hostname="127.0.0.1", port="10001")
-
-    # time.sleep(5)
+    # await my_agent.start()
+    # wait a bit to start all of the previous agents
+    time.sleep(10)
 
     planes = {}
     print("Creating 4 Planes...")
@@ -60,8 +67,12 @@ if __name__ == "__main__":
             # print("JID: ",plane.get('jid'))
             # print("Company: ",plane.get('company'))
             plane.set("status", "permission2TakeOff")
+            # plane.set("status", "permission2Land")
+
         else:
-            plane.set("status", "permission2Land")
+            plane.set("status", "permission2TakeOff")
+
+            # plane.set("status", "permission2Land")
         
         
         plane.set("control_tower", control_tower_jid)
