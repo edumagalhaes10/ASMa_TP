@@ -8,14 +8,14 @@ class Hangar_Manager(Agent):
         print(f"Hangar Manager {str(self.jid)}" + " starting...")
         self.set("hangars", [])
         self.set("max_hangars", 16)
-        self.set("comercial_hangars", 14)
-        self.set("cargo_hangars",2)
+        self.set("Commercial_hangars", 14)
+        self.set("Cargo_hangars",2)
         for i in range(self.get("max_hangars")):
-            if i < self.get("comercial_hangars"):
-                hangar = Hangar("comercial")
+            if i < self.get("Commercial_hangars"):
+                hangar = Hangar("Commercial", f"hangar{i}")
                 self.get("hangars").append(hangar)
             else:
-                hangar = Hangar("cargo")
+                hangar = Hangar("Cargo", f"hangar{i}")
                 self.get("hangars").append(hangar)
                 
         a = InformControlTower()
@@ -40,6 +40,11 @@ class Hangar_Manager(Agent):
             hangar_available.set_plane(plane)
         return hangar_available
 
+
+    def add_plane_to_hangar(self, type, plane):
+        for hangar in self.get("hangars"):
+            if type == hangar.type and hangar.available == True:
+                hangar.set_plane(plane)
 
 
 

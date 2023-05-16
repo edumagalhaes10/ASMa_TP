@@ -7,14 +7,23 @@ from Behaviours.ControlTowerListener import ControlTowerListener
 
 class Control_Tower(Agent):
     
+    # MAIN COMMUNICATIONS HISTORY -> GUARDAR
+    # Quando incializamos avioes para descolar, mete-los num hangar primeiro -> ACHO Q ESTÁ 
+    # VERIFICAR QUE ESTAMOS A ADICIONAR E A REMOVER AVIOES DOS HANGARS
+
     async def setup(self):
         print(f"Control Tower {str(self.jid)}" + " starting...")
-        self.set("landingQueue", [])
-        self.set("takeOffQueue",[])
+        # JUNTAR 2 QUEUES PARA SER MAIS FACIL A SUA GESTÃO. AVIOES QUE PEDEM PARA ATERRAR DE URGENCIA PASSAM A FRENTE NA FILA 
+        self.set("Queue",[])
+        # self.set("landingQueue", [])
+        # self.set("takeOffQueue",[])
         self.set("planeInOperation", ("",""))
         self.set("maxPlanes2Land", 10)
         landingTrack = LandingTrack()
         self.set("landingTrack", landingTrack)
+        self.set("CommercialHangarsOccupied", 0)
+        self.set("CargoHangarsOccupied", 0)
+
         #SECALHAR JUNTAR ESTES DOIS BEHAVIOURS
         c = ControlTowerListener()
         c = self.add_behaviour(c)

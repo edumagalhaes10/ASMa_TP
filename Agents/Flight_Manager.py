@@ -11,11 +11,12 @@ class Flight_Manager(Agent):
     async def setup(self):
         print(f"Hangar Manager {str(self.jid)}" + " starting...")
         self.set("planeInOperation", ("",""))
-        self.set("landingQueue", [])
-        self.set("takeOffQueue",[])
+        self.set("Queue",[])
+        # self.set("landingQueue", [])
+        # self.set("takeOffQueue",[])
 
                 
-        a = AskFlightInfo(period=10)
+        a = AskFlightInfo(period=2)
         self.add_behaviour(a)
 
         b = FlightManagerListener()

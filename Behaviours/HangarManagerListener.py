@@ -12,9 +12,10 @@ class HangarManagerListener(CyclicBehaviour):
                 # print(msg.body)
                 body = msg.body.split("> ")
                 id = body[1].strip()
+                type = body[2].strip()
                 # print(id)
                 #MUDAR ISTO PARA RECEBER TAMBEM O TIPO DE HANGAR 
-                available = self.agent.closest_available("comercial", id)
+                available = self.agent.closest_available(type, id)
                 if available == None:
                     available = "There is no free hangar, added to a queue." + " > " + id
                 else:
@@ -27,6 +28,18 @@ class HangarManagerListener(CyclicBehaviour):
                 # N SEI SE PERFORMATIVE ESTA CERTA
                 response.set_metadata("performative", "confirm")
                 await self.send(response)
+
+            elif performative == "inform":
+                body = msg.body.split(" > ")
+                id = body[0].strip()
+                print("///////////////////BODY:", body)
+                # IR BUSCAR TIPO DO AVIAO
+                self.agent.add_plane_to_hangar("commercial", id)
+
+
+
+
+
 
                 
 

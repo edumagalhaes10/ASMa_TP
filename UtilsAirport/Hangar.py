@@ -1,7 +1,8 @@
 import random
 
 class Hangar:
-    def __init__(self, type):
+    def __init__(self, type, hangar_id):
+        self.hangar_id = hangar_id
         self.x = "%.2f" % random.uniform(-100, 100)
         self.y = "%.2f" % random.uniform(-100, 100)
         self.available = True
@@ -19,11 +20,9 @@ class Hangar:
         self.available = False
         self.plane = plane
 
+    def remove_plane(self):
+        self.available = True
+        self.plane = None
 
     def __str__(self):
-        return f'''***** HANGAR
-\t X: {self.x}
-\t Y: {self.y}
-\t AVAILABLE: {self.available}
-\t TYPE: {self.type}
-        *****'''
+        return f'''***** HANGAR: Hangar Id: {self.hangar_id} | X: {self.x} | Y: {self.y} | AVAILABLE: {self.available} | TYPE: {self.type} | Plane: {self.plane} *****'''

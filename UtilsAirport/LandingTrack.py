@@ -1,6 +1,3 @@
-import random
-import time
-import asyncio
 
 class LandingTrack:
     def __init__(self):
@@ -14,12 +11,5 @@ class LandingTrack:
     def get_available(self):
         return self.available
     
-
-    # def timer_available(self):
-    #     asyncio.sleep(2)
-    #     self.available = True
-
     def set_available(self, availability):
         self.available = availability
-        # if availability == False:
-        #     self.timer_available()
