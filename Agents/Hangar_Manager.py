@@ -7,9 +7,9 @@ class Hangar_Manager(Agent):
     async def setup(self):
         print(f"Hangar Manager {str(self.jid)}" + " starting...")
         self.set("hangars", [])
-        self.set("max_hangars", 16)
-        self.set("Commercial_hangars", 14)
-        self.set("Cargo_hangars",2)
+        self.set("max_hangars", 2)
+        self.set("Commercial_hangars", 1)
+        self.set("Cargo_hangars",1)
         for i in range(self.get("max_hangars")):
             if i < self.get("Commercial_hangars"):
                 hangar = Hangar("Commercial", f"hangar{i}")

@@ -13,24 +13,34 @@ from Agents.Flight_Manager import Flight_Manager
 
 #Import Agents
 
-#SECLAHAR MUDAR SET DO TIPO PARA AQUI PARA SER MAIS FACIL COMPARAR COM NR MAXIMO DE HANGARS NO INICIO CASO SEJA TAKE OFF... 
-#FALTA TIMER PARA AVIOES IREM EMBORA CASO N POSSAM ATERRAR PASSADO X TEMPO
-#FUEL PARA PASSAR A FRENTE NA FILA
+# SECALHAR MUDAR SET DO TIPO PARA AQUI PARA SER MAIS FACIL COMPARAR COM NR MAXIMO DE HANGARS NO INICIO CASO SEJA TAKE OFF...  FALTA VERIFICAR SE EXCEDE NUMERO DE HANGARES DISPONIVEIS
+
+# FUEL PARA PASSAR A FRENTE NA FILA -> NEGOCIAÇAO COM A TORRE DE CONTROLO PARA PASSAR A FRENTE NA FILA
+
+# BLACKBOX NOS AVIOES PARA SALVAGUARDAR AS COMUNICAÇOES...
+# LOGS EM CADA AGENTE...
+# ISTO SE HOUVER TEMPO !!!!!!!!!!
+
+
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DECREMENTO DO NUMERO DE HANGARS OCUPADOS IS NOT OK -> ACHO Q JÁ ESTÁ CHECK !!!!!
-#ADICIONAR TIPO DO AVIAO A TODAS AS OPERACOES -> É IMPORTANTE SENAO ESTA SEMPRE A ADICIONAR E TIRAR DOS HANGARES COMERCIAIS -> ACHO Q JÁ ESTÁ CHECK !!!!! 
+# ADICIONAR TIPO DO AVIAO A TODAS AS OPERACOES -> É IMPORTANTE SENAO ESTA SEMPRE A ADICIONAR E TIRAR DOS HANGARES COMERCIAIS -> ACHO Q JÁ ESTÁ CHECK !!!!! 
 
 # QUANDO AVIAO DESCOLA, AS VEZES BUGA E N RETIRA DO HANGAR... N SEI PQ, VERIFICAR ISTO -> ACHO Q JÁ ESTÁ CHECK !!!!! 
 
+# MATAR AGENTES DEPOIS DE DESCOLAR... CHECK
+
+# FALTA TIMER PARA AVIOES IREM EMBORA CASO N POSSAM ATERRAR PASSADO X TEMPO -> CHECK
+# FALTA REMOVER O TIMEOUT BEHAVIOUR DOS AGENTES Q SAO ACEITES PARA ATERRAR...  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CHECK
+
+# Tempo de circulaçao, pidsta, descolagem tudo junto num timeout behaviour... PERGUNTAR -> CHECK -> FALAR NO RELATORIO SOBRE A DECISÃO
+
 
 if __name__ == "__main__":
-    # ,f'plane{i}',"Ryanair", "Passengers", "Porto", "Lisboa", "TakingOff"
     
     text = colored(pyfiglet.figlet_format("AIRPORT", font = "slant"), "yellow")
     print(text)
-
-    default_info = {"company":"Ryanair", "type":"Passengers", "origin":"Porto", "destination":"Lisboa"}
 
     f = open("conf.json")
     conf = json.load(f)
@@ -72,24 +82,19 @@ if __name__ == "__main__":
     planes = {}
     print("Creating 4 Planes...")      
     # When creating take off planes, must add them to hangar...
-    for i in range(5):
+    for i in range(3):
         last = 0
         plane_jid = f'plane{i}{jid}'
         plane = Plane(plane_jid,pwd)
         plane.set('jid', plane_jid) 
         plane.set('id', f'plane{i}')
-        # for key, value in default_info.items():
-        #     plane.set(key, value)
-        if i<3:
-            # print("JID: ",plane.get('jid'))
-            # print("Company: ",plane.get('company'))
-            # plane.set("status", "permission2TakeOff")
 
+        if i<4:
+            # plane.set("status", "permission2TakeOff")
             plane.set("status", "permission2Land")
 
         else:
             plane.set("status", "permission2TakeOff")
-
             # plane.set("status", "permission2Land")
 
         plane.set("control_tower", control_tower_jid)
@@ -108,14 +113,12 @@ if __name__ == "__main__":
                 # print("!!!!!!!!!!!!!!    LAST CARGO NR = ", last)
                 control_tower.set("CargoHangarsOccupied", last + 1)
 
-        plane.web.start(hostname="127.0.0.1", port=f"1000{i+1}")
+        plane.web.start(hostname="127.0.0.1", port=f"1000{i}")
 
     time.sleep(10)
 
-    for p in planes.values():
-        print(p.__str__())
-
-    # print([p.__str__ for p in planes.values()])
+    # for p in planes.values():
+    #     print(p.__str__())
     while control_tower.is_alive():
         try:
             time.sleep(1)

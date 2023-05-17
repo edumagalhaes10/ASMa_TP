@@ -7,4 +7,5 @@ class TakeOffCompleted(TimeoutBehaviour):
         msg.body = "Take Off Completed"
         msg.set_metadata("performative", "inform")
         await self.send(msg)
+        await self.agent.stop()
 

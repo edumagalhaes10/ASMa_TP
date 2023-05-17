@@ -19,7 +19,11 @@ class Control_Tower(Agent):
         # self.set("takeOffQueue",[])
         self.set("planeInOperation", ("",""))
         self.set("maxPlanes2Land", 10)
-        landingTrack = LandingTrack()
+        landingTrack = LandingTrack(0,0)
+        # landingTrack1 = LandingTrack(100,100)
+        # landingTrack2 = LandingTrack(-100,-100)
+
+        # self.set("landingTrack", landingTrack)
         self.set("landingTrack", landingTrack)
         self.set("CommercialHangarsOccupied", 0)
         self.set("CargoHangarsOccupied", 0)

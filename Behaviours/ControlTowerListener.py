@@ -90,7 +90,19 @@ class ControlTowerListener(CyclicBehaviour):
                     print("RECEIVED HANGARS INFO -", body)
 
                     # print("RECEIVED HANGARS INFO -", str(msg.body))
+                
+                elif msg.body=="Cancel Landing Request":
+                    #au = self.agent.get("Queue")[0]
+                    # print(self.agent.get("Queue")[0])
+                    #print(f"MSG SENDER {msg.sender()} // {au[0].get_jid()}")
+                    # print(f"msg sender________________ {msg.sender}")
 
+                    index_id = [i for i, pl in enumerate(self.agent.get("Queue")) if str(msg.sender) == pl[0].get_jid()]
+                    if index_id:
+                        index_id = index_id[0]
+                        self.agent.get("Queue").pop(index_id)
+    
+                    print(f"«««««««««««««««««««««««««««««««««««««« BAZEIIIIIII {index_id} »»»»»»»»»»»»»»»»»»»»»»»»»»»»»")
 
             elif performative == "request":
                 if msg.body=="Flights Info":
