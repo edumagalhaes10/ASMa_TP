@@ -50,7 +50,7 @@ class ControlTowerListener(CyclicBehaviour):
                             
                             elif len(list_free_tracks)==0 or self.agent.get(f"{type}HangarsOccupied") == self.agent.get(f"{type} hangars"): 
                                 self.agent.free_tracks(None, None, "")
-    
+                                    
                 elif re.match("Hangars Info\n", str(msg.body)):
                     body = msg.body.split(" | ") 
                     body[0] = body[0].split("\n ")[1]

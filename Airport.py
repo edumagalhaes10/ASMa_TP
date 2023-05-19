@@ -100,8 +100,8 @@ if __name__ == "__main__":
             plane.set("status", "permission2Land")
 
         else:
-            plane.set("status", "permission2TakeOff")
-            # plane.set("status", "permission2Land")
+            # plane.set("status", "permission2TakeOff")
+            plane.set("status", "permission2Land")
 
         planes[f'plane{i}'] = plane
         plane.start()
