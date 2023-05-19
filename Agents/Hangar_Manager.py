@@ -7,9 +7,10 @@ class Hangar_Manager(Agent):
     async def setup(self):
         print(f"Hangar Manager {str(self.jid)}" + " starting...")
         self.set("hangars", [])
-        self.set("max_hangars", 20)
         self.set("Commercial_hangars", 10)
         self.set("Cargo_hangars",10)
+        self.set("max_hangars",  self.get("Cargo_hangars") +  self.get("Commercial_hangars"))
+
         for i in range(self.get("max_hangars")):
             if i < self.get("Commercial_hangars"):
                 hangar = Hangar("Commercial", f"hangar{i}")
@@ -42,17 +43,18 @@ class Hangar_Manager(Agent):
 
         if hangar_available != None:
             hangar_available.set_plane(plane)
-        print("FREAKING OUT : ", track, hangar_available)
         return track, hangar_available
 
 
     def add_plane_to_hangar(self, type, plane):
         for hangar in self.get("hangars"):
-            if type == hangar.type and hangar.available == True:
+            print("HANGAR ID =", hangar.get_id(), " | AVAILABLE = ", hangar.get_availability())
+            if type == hangar.type and hangar.get_availability() == True:
                 hangar.set_plane(plane)
                 return hangar
         
     def remove_plane_from_hangar(self,plane):
+        
         for hangar in self.get("hangars"):
             if plane == hangar.plane:
                 hangar.remove_plane()

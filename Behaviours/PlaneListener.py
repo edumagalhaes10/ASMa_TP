@@ -27,21 +27,21 @@ class PlaneListener(CyclicBehaviour):
                 permission2TakeOff = Permission2TakeOff()
                 self.agent.add_behaviour(permission2TakeOff)
 
-
             else:
                 body = response.body.split(" | ")
 
-                if body[0] == "Permission to take off granted":
-                    print("Almost Taking Off")
+                if body[0] == "Permission to take off granted" and performative == "confirm":
+                    print(body[0], "-> Almost Taking Off")
+                    self.agent.set("Hangar", None)   
                     start_At = datetime.datetime.now() + datetime.timedelta(seconds=15)
                     confirmation = TakeOffCompleted(start_at=start_At)
                     self.agent.add_behaviour(confirmation)
-                elif body[0] == "Permission to take off denied, added to a queue":
-                    print("Permission to take off denied /////////////////////////////")
+                elif body[0] == "Permission to take off denied, added to a queue" and performative=="refuse":
+                    print(body[0])
 
 
-                if body[0] == "Permission to land granted":
-                    print("Almost Landing")
+                if body[0] == "Permission to land granted" and performative == "confirm":
+                    print(body[0], "-> Almost Landing")
                     start_At = datetime.datetime.now() + datetime.timedelta(seconds=15)
                     confirmation = LandingCompleted(start_at=start_At)
                     self.agent.add_behaviour(confirmation)
@@ -54,27 +54,19 @@ class PlaneListener(CyclicBehaviour):
                         arr_info_hangar.append(aux2[1])
                     
                     info_hangar = HangarInfo(arr_info_hangar)
-
                     self.agent.set("Hangar", info_hangar)   
-
                     self.agent.set("Track", body[2].strip())                 
-
-                    # Remove the "Cancel" behavior if it exists
-                    # for behaviour in self.agent.behaviours:
-                    #     if isinstance(behaviour, Cancel):
-                    #         # behaviour.kill()
-                    #         behaviour.cancel()
-                    #         self.agent.remove_behaviour(behaviour)
-                    #         print("<<<<< CANCEL BEHAVIOR KILLED AND REMOVED >>>>>")
                     self.agent.set("flag", False)
 
 
-                elif body[0] == "Permission to land denied, added to a queue":
+                elif body[0] == "Permission to land denied, added to a queue" and performative=="refuse":
                     start_At = datetime.datetime.now() + datetime.timedelta(seconds=50)
                     cancel = Cancel(start_at=start_At)
                     self.agent.add_behaviour(cancel)
             
-            
+                if body[0] == "Permission to land denied, Landing Queue is full - Must head to Lisboa Airport" and performative=="refuse":
+                    print(body[0])
+                    self.agent.stop()
     
     async def on_end(self):
         await self.agent.stop()

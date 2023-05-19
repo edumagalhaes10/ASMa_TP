@@ -17,7 +17,6 @@ class LandingTrack:
     def get_state_plane(self):
         return self.state_plane
 
-
     def get_coords(self):
         return self.x, self.y
 

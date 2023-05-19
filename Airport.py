@@ -95,13 +95,13 @@ if __name__ == "__main__":
         plane.set("control_tower", control_tower_jid)
 
 
-        if i<4:
-            plane.set("status", "permission2TakeOff")
-            # plane.set("status", "permission2Land")
-
-        else:
+        if i<5:
             # plane.set("status", "permission2TakeOff")
             plane.set("status", "permission2Land")
+
+        else:
+            plane.set("status", "permission2TakeOff")
+            # plane.set("status", "permission2Land")
 
         planes[f'plane{i}'] = plane
         plane.start()
@@ -142,24 +142,23 @@ if __name__ == "__main__":
             # plane.set('id', f'plane{index}')
     
             # #ARRANJAR MANEIRA RANDOM
-
             # plane.set("status", "permission2Land")
     
             # plane.set("control_tower", control_tower_jid)
             # planes[f'plane{index}'] = plane
             # plane.start()
-            # if plane.get("status") == "permission2TakeOff":
-            #     while plane.get("Type") == None:
-            #         time.sleep(1)
-            #     type = plane.get("Type")
-            #     print("TYPE PLANE: ", type)
-            #     if type == "Commercial":
-            #         last = control_tower.get("CommercialHangarsOccupied")
-            #         control_tower.set("CommercialHangarsOccupied", last + 1)
-            #     else:
-            #         last = control_tower.get("CargoHangarsOccupied")
-            #         # print("!!!!!!!!!!!!!!    LAST CARGO NR = ", last)
-            #         control_tower.set("CargoHangarsOccupied", last + 1)
+            # # if plane.get("status") == "permission2TakeOff":
+            # #     while plane.get("Type") == None:
+            # #         time.sleep(1)
+            # #     type = plane.get("Type")
+            # #     print("TYPE PLANE: ", type)
+            # #     if type == "Commercial":
+            # #         last = control_tower.get("CommercialHangarsOccupied")
+            # #         control_tower.set("CommercialHangarsOccupied", last + 1)
+            # #     else:
+            # #         last = control_tower.get("CargoHangarsOccupied")
+            # #         # print("!!!!!!!!!!!!!!    LAST CARGO NR = ", last)
+            # #         control_tower.set("CargoHangarsOccupied", last + 1)
     
             # plane.web.start(hostname="127.0.0.1", port=f"1000{index}") 
             # index+=1

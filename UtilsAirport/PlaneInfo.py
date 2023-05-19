@@ -1,7 +1,6 @@
 
 class PlaneInfo:
 
-
     def __init__(self, array_info): #, id, jid, type,company, origin, destination, fuel, status):
         self.id = array_info[0]
         self.jid = array_info[1]
@@ -11,6 +10,7 @@ class PlaneInfo:
         self.destination = array_info[5]
         self.fuel = array_info[6]
         self.status = array_info[7]
+        self.hangar = None
 
 
     def get_id(self):
@@ -44,5 +44,5 @@ class PlaneInfo:
         return self.hangar 
 
     def __str__(self):
-        return f'''Plane: {self.get_id()} | Jid: {self.get_jid()} | Type: {self.get_type()} | Company: {self.get_company()} | Origin: {self.get_origin()} | Destination: {self.get_destination()} | Fuel: {self.get_fuel()}'''
+        return f'''Plane: {self.get_id()} | Jid: {self.get_jid()} | Type: {self.get_type()} | Company: {self.get_company()} | Origin: {self.get_origin()} | Destination: {self.get_destination()} | Fuel: {self.get_fuel()} | Hangar: {self.get_hangar()}'''
 

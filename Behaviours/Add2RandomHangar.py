@@ -8,7 +8,6 @@ class Add2RandomHangar(OneShotBehaviour):
         super().__init__()
 
     async def run(self):
-        # print("--------------------------------ADD 2 RANDOM HANGAR PERFORMATIVE---------------------------------")
         msg = Message(to=self.agent.get("control_tower"))
         msg.body = f"Add to an hangar > {self.jid} > {self.type}"
         msg.set_metadata("performative", "request")

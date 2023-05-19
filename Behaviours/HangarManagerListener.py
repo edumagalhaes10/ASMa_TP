@@ -3,13 +3,10 @@ from spade.message import Message
 
 class HangarManagerListener(CyclicBehaviour):
     async def run(self):
-        # Wait for a message granting or denying permission to take off
         msg = await self.receive()
         if msg:
             performative = msg.get_metadata('performative')
-            # Process the response
             if performative == "request":
-                # print(msg.body)
                 body = msg.body.split(" > ")
                 if body[0].strip() == "Is there any free hangar?":
                     id = body[1].strip()
@@ -33,9 +30,7 @@ class HangarManagerListener(CyclicBehaviour):
 
 
                     response = Message(to=str(msg.sender))
-                    print("HANGAR MANAGER ", available)
                     response.body = available
-                    # N SEI SE PERFORMATIVE ESTA CERTA
                     response.set_metadata("performative", "confirm")
                     await self.send(response)
                 
@@ -44,20 +39,17 @@ class HangarManagerListener(CyclicBehaviour):
                     id = body[1].strip()
                     type = body[2].strip()
                     hangar = self.agent.add_plane_to_hangar(type, id)
-
                     response = Message(to=str(msg.sender))
                     response.body = f"Initial Hangar > {hangar} > {id}"
-                    # N SEI SE PERFORMATIVE ESTA CERTA
                     response.set_metadata("performative", "confirm")
                     await self.send(response)
 
 
 
             elif performative == "inform":
-                print("REMOVE PLANE FROM HANGAR MAN")
+                # print("REMOVE PLANE FROM HANGAR")
                 body = msg.body.split(" > ")
                 id = body[0].strip()
-                # IR BUSCAR TIPO DO AVIAO
                 self.agent.remove_plane_from_hangar(id)
 
 

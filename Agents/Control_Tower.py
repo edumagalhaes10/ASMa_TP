@@ -1,23 +1,20 @@
 from spade.agent import Agent
-from Behaviours.ConfirmTakeOff import ConfirmTakeOff
-from Behaviours.ConfirmLanding import ConfirmLanding
+from Behaviours.ReceiveTakeOffRequest import ReceiveTakeOffRequest
+from Behaviours.ReceiveLandingRequest import ReceiveLandingRequest
 from UtilsAirport.LandingTrack import LandingTrack
 from Behaviours.ControlTowerListener import ControlTowerListener
 
 
 class Control_Tower(Agent):
-    
-    # MAIN COMMUNICATIONS HISTORY -> GUARDAR
-    # Quando incializamos avioes para descolar, mete-los num hangar primeiro -> ACHO Q ESTÁ 
-    # VERIFICAR QUE ESTAMOS A ADICIONAR E A REMOVER AVIOES DOS HANGARS
 
     async def setup(self):
         print(f"Control Tower {str(self.jid)}" + " starting...")
         self.set("Queue",[])
         self.set("planeInOperation", ("",""))
         self.set("new_planesInOperation", [])
-        self.set("maxPlanes2Land", 10)
+        self.set("maxPlanes2Land", 3)
         self.set("frozenTracks", [])
+        self.set("help_structure", {})
         index = 0
         landingTrack = LandingTrack(0,0,index)
 
@@ -36,49 +33,35 @@ class Control_Tower(Agent):
         self.set("CommercialHangarsOccupied", 0)
         self.set("CargoHangarsOccupied", 0)
 
-        #SECALHAR JUNTAR ESTES DOIS BEHAVIOURS
         c = ControlTowerListener()
         c = self.add_behaviour(c)
-        a = ConfirmTakeOff()  
+        a = ReceiveTakeOffRequest()  
         self.add_behaviour(a)
-        b = ConfirmLanding()
+        b = ReceiveLandingRequest()
         self.add_behaviour(b)
 
-    # def any_free_track(self):
-    #     ret = False
-    #     for track in self.get("landingTrack"):
-    #         if track.get_available() == True:
-    #             ret = True
-    #             track.set_available(False)
-        
-    #     return ret
-    
     def any_free_track(self):
         ret = []
         ret2 = []
         for track in self.get("landingTrack"):
-            # print("TRACK AVAILABLE: ", track.get_available())
             if track.get_available() == True:
                 ret.append((track.get_id(),track.get_coords()))    
                 ret2.append(track.get_id())    
                 track.set_available(False)
         self.set("frozenTracks", ret2)
-        # print("FROZEN TRACKS: ", ret2)
 
         return ret    
     
     def free_tracks(self, id_track, plane, state):
-        print("MAN, ENTREI NA CENA DE DAR FREE DAS TRACKS")
         if id_track:
             for track in self.get("landingTrack"):
-                # print("+++\n",track.get_id().strip(), " | id:track:", id_track.strip(), "\n +++")
-                # print("+++\n", self.get("frozenTracks"), "\n +++")
+
                 if track.get_id().strip() != id_track and track.get_id().strip() in self.get("frozenTracks"): 
                     track.set_available(True)
-                    # print("MAN, MUDEI O ESTADO PARA TRUE")
                 elif track.get_id() == id_track:
-                    track.set_plane(plane, state) 
-                    # print("MAN, ADICIONEI O PLANE")
+                    plane_info = self.get("help_structure")[plane]
+                    track.set_plane(plane_info, state) 
+                    self.get("help_structure").pop(plane)
         else:
             for track in self.get("landingTrack"):
                 if track.get_id().strip() in self.get("frozenTracks"):
@@ -87,12 +70,7 @@ class Control_Tower(Agent):
         self.set("frozenTracks", [])
     
     def free_used_track(self, id_plane):
-        # print("ID_PLANE: ", id_plane)
         for track in self.get("landingTrack"):
-            plane = track.get_plane()
-            # print("+++\n",plane, " | id:plane:", id_plane, "\n +++")
-
-            # print("ID_PLANE_TRACK: ", track.get_plane())
             if isinstance(track.get_plane(), str)  and track.get_plane() == id_plane: 
                     track.set_available(True)
                     track.remove_plane()
@@ -129,3 +107,10 @@ class Control_Tower(Agent):
 
         return track_chosen
 
+
+    def count_planes_waiting2land(self):
+        count = 0
+        for plane in self.get("Queue"):
+            if plane[1] == "Waiting To Land":
+                count += 1
+        return count

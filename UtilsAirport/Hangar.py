@@ -8,7 +8,9 @@ class Hangar:
         self.available = True
         self.type = type
         self.plane = None
-        # TODO: ADICIONAR ID DO HANGAR E AVIAO O ESTA A OCUPAR
+
+    def get_id(self):
+        return self.hangar_id
 
     def get_coords(self):
         return self.x, self.y

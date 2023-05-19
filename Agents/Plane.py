@@ -7,8 +7,6 @@ import random
 
 class Plane(Agent):
 
-    # Maybe juntar Lista com landing e take off, quando adiciona a lista se for emergencia passar a frente na fila como por exemplo, ter pouco combustivel  
-
     def __str__(self):
         return f'''Plane: {self.get("id")} | Jid: {self.get("jid")} | Type: {self.get("Type")} | Company: {self.get("Company")} | Origin: {self.get("Origin")} | Destination: {self.get("Destination")} | Fuel: {self.get("Fuel")} | Status: {self.get("status")}'''
 
@@ -31,11 +29,6 @@ class Plane(Agent):
             self.set("Destination", cities[random.randint(1, 13)])
             self.set("Origin", "Porto")
 
-            # add2randomhangar = Add2RandomHangar(self.get("jid"), self.get("Type"))
-            # self.add_behaviour(add2randomhangar)
-
-            # permission2TakeOff = Permission2TakeOff()
-            # self.add_behaviour(permission2TakeOff)
         elif self.get("status") == "permission2Land":
             self.set("Destination", "Porto")
             self.set("Origin", cities[random.randint(1, 13)])

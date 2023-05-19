@@ -10,11 +10,9 @@ class FlightManagerListener(CyclicBehaviour):
         self.counter = 0
 
     async def run(self):
-        # Wait for a message granting or denying permission to take off
         msg = await self.receive()
         if msg:
             performative = msg.get_metadata('performative')
-            # Process the response
             if performative == "inform":
                 
                 color = "yellow"
@@ -45,8 +43,6 @@ class FlightManagerListener(CyclicBehaviour):
                         print(colored(b[0]+": ", color, attrs=["bold"]) + " " + b[1] + "\n")
 
                 # print(msg.body)
-
-
                 print(colored("*"*188, color))
                 self.counter +=1
 
