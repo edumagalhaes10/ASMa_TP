@@ -9,6 +9,8 @@ from Agents.Plane import Plane
 from Agents. Control_Tower import Control_Tower
 from Agents.Hangar_Manager import Hangar_Manager
 from Agents.Flight_Manager import Flight_Manager
+from Behaviours.Add2RandomHangar import Add2RandomHangar
+
 
 
 #Import Agents
@@ -82,22 +84,25 @@ if __name__ == "__main__":
     planes = {}
     print("Creating 4 Planes...")      
     # When creating take off planes, must add them to hangar...
-    for i in range(3):
+    nr_planes = 10
+    for i in range(nr_planes):
+        time.sleep(1)
         last = 0
         plane_jid = f'plane{i}{jid}'
         plane = Plane(plane_jid,pwd)
         plane.set('jid', plane_jid) 
         plane.set('id', f'plane{i}')
+        plane.set("control_tower", control_tower_jid)
+
 
         if i<4:
-            # plane.set("status", "permission2TakeOff")
-            plane.set("status", "permission2Land")
-
-        else:
             plane.set("status", "permission2TakeOff")
             # plane.set("status", "permission2Land")
 
-        plane.set("control_tower", control_tower_jid)
+        else:
+            # plane.set("status", "permission2TakeOff")
+            plane.set("status", "permission2Land")
+
         planes[f'plane{i}'] = plane
         plane.start()
         if plane.get("status") == "permission2TakeOff":
@@ -108,20 +113,56 @@ if __name__ == "__main__":
             if type == "Commercial":
                 last = control_tower.get("CommercialHangarsOccupied")
                 control_tower.set("CommercialHangarsOccupied", last + 1)
+                print("CONTROL TOWER COMMERCIAL ", control_tower.get("CommercialHangarsOccupied"))
             else:
                 last = control_tower.get("CargoHangarsOccupied")
                 # print("!!!!!!!!!!!!!!    LAST CARGO NR = ", last)
                 control_tower.set("CargoHangarsOccupied", last + 1)
+                print("CONTROL TOWER CARGO ", control_tower.get("CargoHangarsOccupied"))
+            
+            add2randomhangar = Add2RandomHangar(plane.get("jid"), plane.get("Type"))
+            plane.add_behaviour(add2randomhangar)
+
+
 
         plane.web.start(hostname="127.0.0.1", port=f"1000{i}")
 
+    index = nr_planes + 1
     time.sleep(10)
 
     # for p in planes.values():
     #     print(p.__str__())
     while control_tower.is_alive():
         try:
-            time.sleep(1)
+            time.sleep(5)
+            # last = 0
+            # plane_jid = f'plane{index}{jid}'
+            # plane = Plane(plane_jid,pwd)
+            # plane.set('jid', plane_jid) 
+            # plane.set('id', f'plane{index}')
+    
+            # #ARRANJAR MANEIRA RANDOM
+
+            # plane.set("status", "permission2Land")
+    
+            # plane.set("control_tower", control_tower_jid)
+            # planes[f'plane{index}'] = plane
+            # plane.start()
+            # if plane.get("status") == "permission2TakeOff":
+            #     while plane.get("Type") == None:
+            #         time.sleep(1)
+            #     type = plane.get("Type")
+            #     print("TYPE PLANE: ", type)
+            #     if type == "Commercial":
+            #         last = control_tower.get("CommercialHangarsOccupied")
+            #         control_tower.set("CommercialHangarsOccupied", last + 1)
+            #     else:
+            #         last = control_tower.get("CargoHangarsOccupied")
+            #         # print("!!!!!!!!!!!!!!    LAST CARGO NR = ", last)
+            #         control_tower.set("CargoHangarsOccupied", last + 1)
+    
+            # plane.web.start(hostname="127.0.0.1", port=f"1000{index}") 
+            # index+=1
         except KeyboardInterrupt:
             for id, p in planes.items():
                 print(id)

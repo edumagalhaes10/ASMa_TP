@@ -10,31 +10,55 @@ class HangarManagerListener(CyclicBehaviour):
             # Process the response
             if performative == "request":
                 # print(msg.body)
-                body = msg.body.split("> ")
-                id = body[1].strip()
-                type = body[2].strip()
-                # print(id)
-                #MUDAR ISTO PARA RECEBER TAMBEM O TIPO DE HANGAR 
-                available = self.agent.closest_available(type, id)
-                if available == None:
-                    available = "There is no free hangar, added to a queue." + " > " + id
-                else:
-                    available = str(available) + " > " + id
+                body = msg.body.split(" > ")
+                if body[0].strip() == "Is there any free hangar?":
+                    id = body[1].strip()
+                    type = body[2].strip()
+                    tracks = body[3].strip()
+                    tracks = tracks.split(" | ")
 
-                # print("AVAILABLE: ",available)
+                    treated_tracks = {}
+                    for t in tracks:
+                        aux = t.split(": ")
+                        id_track = aux[0]
+                        xy = aux[1].split(",") 
+                        treated_tracks[id_track] = xy
 
-                response = Message(to=str(msg.sender))
-                response.body = available
-                # N SEI SE PERFORMATIVE ESTA CERTA
-                response.set_metadata("performative", "confirm")
-                await self.send(response)
+                  
+                    id_track, available = self.agent.closest_available(type, id, treated_tracks)
+                    if available == None:
+                        available = "There is no free hangar, added to a queue." + " > " + id
+                    else:
+                        available = str(available) + " > " + id_track + " > " + id + " > " + type 
+
+
+                    response = Message(to=str(msg.sender))
+                    print("HANGAR MANAGER ", available)
+                    response.body = available
+                    # N SEI SE PERFORMATIVE ESTA CERTA
+                    response.set_metadata("performative", "confirm")
+                    await self.send(response)
+                
+                elif body[0].strip() == "Add to an hangar":
+
+                    id = body[1].strip()
+                    type = body[2].strip()
+                    hangar = self.agent.add_plane_to_hangar(type, id)
+
+                    response = Message(to=str(msg.sender))
+                    response.body = f"Initial Hangar > {hangar} > {id}"
+                    # N SEI SE PERFORMATIVE ESTA CERTA
+                    response.set_metadata("performative", "confirm")
+                    await self.send(response)
+
+
 
             elif performative == "inform":
+                print("REMOVE PLANE FROM HANGAR MAN")
                 body = msg.body.split(" > ")
                 id = body[0].strip()
-                print("///////////////////BODY:", body)
                 # IR BUSCAR TIPO DO AVIAO
-                self.agent.add_plane_to_hangar("commercial", id)
+                self.agent.remove_plane_from_hangar(id)
 
 
 

@@ -12,6 +12,7 @@ class PlaneInfo:
         self.fuel = array_info[6]
         self.status = array_info[7]
 
+
     def get_id(self):
         return self.id
     
@@ -35,6 +36,12 @@ class PlaneInfo:
     
     def get_status(self):
         return self.status
+    
+    def setHangar(self, hangar):
+        self.hangar = hangar
+
+    def get_hangar(self):
+        return self.hangar 
 
     def __str__(self):
         return f'''Plane: {self.get_id()} | Jid: {self.get_jid()} | Type: {self.get_type()} | Company: {self.get_company()} | Origin: {self.get_origin()} | Destination: {self.get_destination()} | Fuel: {self.get_fuel()}'''

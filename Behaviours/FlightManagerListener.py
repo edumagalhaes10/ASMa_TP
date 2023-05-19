@@ -16,8 +16,6 @@ class FlightManagerListener(CyclicBehaviour):
             performative = msg.get_metadata('performative')
             # Process the response
             if performative == "inform":
-                #TRATAR MSG PARA DEPOIS GUARDAR 
-                # self.agent.set("Queue",(newlanding,"Landing"))
                 
                 color = "yellow"
 
@@ -30,17 +28,21 @@ class FlightManagerListener(CyclicBehaviour):
 
 
                     if b[0] == "Plane In Operation":
-                        # print(colored(b[0]+" -> ", color, attrs=["bold"]) + " " + b[1][0] + " is " + colored(b[1],attrs=["bold"]) + "\n")
-                        print(colored(b[0]+" -> ", color, attrs=["bold"]) + " " + b[1])
+                        new_b = b[1].split(" $ ")
+                        print(colored(b[0]+": \n", color, attrs=["bold"]))
+                        if b[1]:
+                            for item in new_b:
+                                print(item)
+                        else: print("    Empty\n")
                     elif b[0] == "Airport Queue":
                         new_b = b[1].split(" $ ")
-                        print(colored(b[0]+" -> \n", color, attrs=["bold"]))
+                        print(colored(b[0]+": \n", color, attrs=["bold"]))
                         if b[1]:
                             for item in new_b:
                                 print(item)
                         else: print("    Empty\n")
                     else:
-                        print(colored(b[0]+" -> ", color, attrs=["bold"]) + " " + b[1] + "\n")
+                        print(colored(b[0]+": ", color, attrs=["bold"]) + " " + b[1] + "\n")
 
                 # print(msg.body)
 

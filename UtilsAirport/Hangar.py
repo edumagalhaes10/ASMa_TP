@@ -25,4 +25,5 @@ class Hangar:
         self.plane = None
 
     def __str__(self):
-        return f'''***** HANGAR: Hangar Id: {self.hangar_id} | X: {self.x} | Y: {self.y} | AVAILABLE: {self.available} | TYPE: {self.type} | Plane: {self.plane} *****'''
+        return f'''Hangar Id: {self.hangar_id} | X: {self.x} | Y: {self.y}'''
+        # return f'''***** HANGAR: Hangar Id: {self.hangar_id} | X: {self.x} | Y: {self.y} | AVAILABLE: {self.available} | TYPE: {self.type} | Plane: {self.plane} *****'''
