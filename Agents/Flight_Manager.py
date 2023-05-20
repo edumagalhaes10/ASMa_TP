@@ -6,7 +6,6 @@ class Flight_Manager(Agent):
 
     async def setup(self):
         print(f"Hangar Manager {str(self.jid)}" + " starting...")
-        self.set("planeInOperation", ("",""))
         self.set("Queue",[])
         
                 

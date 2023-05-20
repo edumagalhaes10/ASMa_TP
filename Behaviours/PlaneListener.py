@@ -42,7 +42,7 @@ class PlaneListener(CyclicBehaviour):
 
                 if body[0] == "Permission to land granted" and performative == "confirm":
                     print(body[0], "-> Almost Landing")
-                    start_At = datetime.datetime.now() + datetime.timedelta(seconds=15)
+                    start_At = datetime.datetime.now() + datetime.timedelta(seconds=10)
                     confirmation = LandingCompleted(start_at=start_At)
                     self.agent.add_behaviour(confirmation)
                     self.agent.set("landingTrack", body[2].strip())
@@ -66,7 +66,7 @@ class PlaneListener(CyclicBehaviour):
             
                 if body[0] == "Permission to land denied, Landing Queue is full - Must head to Lisboa Airport" and performative=="refuse":
                     print(body[0])
-                    self.agent.stop()
+                    await   self.agent.stop()
     
     async def on_end(self):
         await self.agent.stop()

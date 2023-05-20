@@ -36,12 +36,17 @@ class ReceiveLandingRequest(CyclicBehaviour):
                         pl_info.setHangar(hangar_info)
 
                         info = (pl_info, "Waiting To Land")
-                        self.agent.get("Queue").append(info)
+                        if self.agent.get(f"{pl_info.get_type()}HangarsOccupied") <= 0.3* self.agent.get(f"{pl_info.get_type()} hangars"):
+                            self.agent.get("Queue").insert(0,info)
+                        else:
+                            self.agent.get("Queue").append(info)
 
                         print(f"Permission to land received - {str(msg.sender)}")
                         confirmLanding = ConfirmLanding(str(msg.sender), "Permission to land denied, added to a queue", "refuse")
                         self.agent.add_behaviour(confirmLanding)
                     
                     elif self.agent.count_planes_waiting2land() == self.agent.get("maxPlanes2Land"):
+                        last = self.get("Canceled Landings")
+                        self.set("Canceled Landings", last+1)
                         confirmLanding = ConfirmLanding(str(msg.sender), "Permission to land denied, Landing Queue is full - Must head to Lisboa Airport", "refuse")
                         self.agent.add_behaviour(confirmLanding)

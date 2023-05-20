@@ -3,33 +3,33 @@ from Behaviours.ReceiveTakeOffRequest import ReceiveTakeOffRequest
 from Behaviours.ReceiveLandingRequest import ReceiveLandingRequest
 from UtilsAirport.LandingTrack import LandingTrack
 from Behaviours.ControlTowerListener import ControlTowerListener
-
+import json
+import random
 
 class Control_Tower(Agent):
 
     async def setup(self):
+        f = open("conf.json")
+        conf = json.load(f)
         print(f"Control Tower {str(self.jid)}" + " starting...")
         self.set("Queue",[])
-        self.set("planeInOperation", ("",""))
-        self.set("new_planesInOperation", [])
-        self.set("maxPlanes2Land", 3)
+        self.set("maxPlanes2Land", conf["maxPlanesWaiting2Land"])
         self.set("frozenTracks", [])
         self.set("help_structure", {})
-        index = 0
-        landingTrack = LandingTrack(0,0,index)
+        self.set("Landings", 0)
+        self.set("Taking Offs", 0)
+        self.set("Canceled Landings", 0)
 
-        index += 1
-        landingTrack1 = LandingTrack(100,100,index)
 
-        index +=1
-        landingTrack2 = LandingTrack(-100,-100,index)
 
-        index += 1
-        landingTrack3 = LandingTrack(-500,-200,index)
+        array_landing_tracks = []
+        for index in range(conf["nr_tracks"]):
+            x = "%.2f" % random.uniform(-1000, 1000)
+            y = "%.2f" % random.uniform(-1000, 1000)
+            landingTrack = LandingTrack(x,y,index)
+            array_landing_tracks.append(landingTrack)
 
-        #...
-
-        self.set("landingTrack", [landingTrack, landingTrack1, landingTrack2,landingTrack3])
+        self.set("landingTrack", array_landing_tracks)
         self.set("CommercialHangarsOccupied", 0)
         self.set("CargoHangarsOccupied", 0)
 
@@ -84,13 +84,12 @@ class Control_Tower(Agent):
 
     def choose_track_to_takeOff(self, plane, x, y):
         track_chosen = None
-        # print("PLANEEEEEEE ID", plane.get_id())
         for track in self.get("landingTrack"):
             if track.get_id() in self.get("frozenTracks"):
                 x, y = track.get_coords()
                 if track_chosen == None:
                     track_chosen = track 
-                elif ( (pow(float(y)- float(track.x),2) + pow(float(y)- float(track.y),2)) < (pow(float(x)- float(track_chosen.x),2) + pow(int(y)- float(track_chosen.y),2))):
+                elif ( (pow(float(x)- float(track.x),2) + pow(float(y)- float(track.y),2)) < (pow(float(x)- float(track_chosen.x),2) + pow(float(y)- float(track_chosen.y),2))):
                     track_chosen = track
 
 
@@ -114,3 +113,12 @@ class Control_Tower(Agent):
             if plane[1] == "Waiting To Land":
                 count += 1
         return count
+    
+    def results(self):
+        with open("results.json", "w") as outfile:
+            dictionary = {}
+            dictionary["Landings"] = self.get("Landings")
+            dictionary["Taking Offs"] = self.get("Taking Offs")
+            dictionary["Canceled Landings"] = self.get("Canceled Landings")
+            json.dump(dictionary, outfile)
+            outfile.flush()

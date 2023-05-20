@@ -6,10 +6,7 @@ from Behaviours.ConfirmLanding import ConfirmLanding
 from Behaviours.AskHangar import AskHangar
 from UtilsAirport.HangarInfo import HangarInfo
 from termcolor import colored
-
-
-
-# BUGADO QUANDO PEDE MAIS HANGARES E OS AVIOES ESTAO NA FILA DE ESPERA
+import json
 
 
 class ControlTowerListener(CyclicBehaviour):
@@ -21,10 +18,16 @@ class ControlTowerListener(CyclicBehaviour):
             if performative == "inform":
                 
                 if re.match("Landing Completed", str(msg.body)) or re.match("Take Off Completed", str(msg.body)):
+                    if re.match("Landing Completed", str(msg.body)):
+                        last = self.get("Landings")
+                        self.set("Landings", last+1)
+                    elif re.match("Take Off Completed", str(msg.body)):
+                        last = self.get("Taking Offs")
+                        self.set("Taking Offs", last+1)
+
                     print("RECEIVED - ",str(msg.body))
                     aux = msg.body.split(" > ")
                     id_plane = aux[1]
-                    self.agent.set("planeInOperation",("",""))
                     self.agent.free_used_track(id_plane)
                     if len(self.agent.get("Queue")) > 0:
 
@@ -36,7 +39,9 @@ class ControlTowerListener(CyclicBehaviour):
                                 self.agent.get("Queue").pop(i)
 
                                 posx,posy = pl[0].get_hangar().get_coords()
-                                track = self.agent.choose_track_to_takeOff(pl[0], posx, posy)    
+                                track = self.agent.choose_track_to_takeOff(pl[0], posx, posy)   
+                                hangar_info = HangarInfo(["-", "-", "-"])
+                                pl[0].setHangar(hangar_info) 
                                 hangar_occupation = self.agent.get(f"{type}HangarsOccupied")
                                 if hangar_occupation > 0:
                                     self.agent.set(f"{type}HangarsOccupied", hangar_occupation-1)
@@ -63,6 +68,10 @@ class ControlTowerListener(CyclicBehaviour):
                     if index_id:
                         index_id = index_id[0]
                         self.agent.get("Queue").pop(index_id)
+
+                    last = self.get("Canceled Landings")
+                    self.set("Canceled Landings", last+1)
+
     
 
             elif performative == "request":
@@ -72,13 +81,13 @@ class ControlTowerListener(CyclicBehaviour):
                     for i,q in enumerate(self.agent.get("Queue")):
                         plane_str = q[0].__str__()
                         q = (plane_str, q[1])
-                        queue += "    " + str(i) + ". " + str(q) + " $ " 
+                        queue += "    " + colored(str(i),"yellow") + ". " + str(q) + " $ " 
 
                     
                     info_tracks=""
                     for track in self.agent.get("landingTrack"):
                         if track.get_plane() == None:
-                            info = "Empty" + " " + str(track.get_available())
+                            info = "Empty" #+ " " + str(track.get_available())
                         else: info = str(track.get_plane()) + " ➡️ " + track.get_state_plane() #+ " " + str(track.get_available())
                         info_tracks += "    " + str(colored(track.get_id(), "yellow")) + ". " + info + " $ " 
 
@@ -154,6 +163,17 @@ class ControlTowerListener(CyclicBehaviour):
                         confirmLanding = ConfirmLanding(id, f"Permission to land granted | {hangar} | {track}", "confirm")
                         self.agent.add_behaviour(confirmLanding)
                     
+
+    def results(self):
+        with open("results.json", "w") as outfile:
+            dictionary = {}
+            dictionary["Landings"] = self.get("Landings")
+            dictionary["Taking Offs"] = self.get("Taking Offs")
+            dictionary["Canceled Landings"] = self.get("Canceled Landings")
+            json.dump(dictionary, outfile)
+            outfile.flush()
+
+
 
 
             
